@@ -10,13 +10,12 @@ import logging
 from flask import Flask, request
 
 # Импортируем функции из handlers.py
-from handlers import greet_user, poems, math, language
+from handlers import dialog_handler
 
 app = Flask(__name__)
 
 
 logging.basicConfig(level=logging.DEBUG)
-
 
 
 @app.route('/', methods=['POST'])
@@ -32,13 +31,7 @@ def main():
         }
     }
 
-    greet_user(request.json, response)
-
-    poems(request.json, response)
-
-    math(request.json, response)
-
-    language(request.json, response)
+    dialog_handler(request.json, response)
 
     logging.info('Response: %r', response)
 
@@ -47,6 +40,7 @@ def main():
         ensure_ascii=False,
         indent=2
     )
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
