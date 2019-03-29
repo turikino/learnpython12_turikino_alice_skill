@@ -59,6 +59,12 @@ def dialog_handler(req, res):
         res['response']['buttons'] = get_suggests(user_id)
         return
 
+    # Перехват функции поэзия.
+    if res['session']['branch'] == 'poems':
+
+        poems(req, res)
+        return
+
     # Если не можем найти в нашей базе, то пробуем создать новый запрос
     res['response']['text'] = 'Не могу найти {}. Давайте попробуем выучить что-нибудь другое?'.format(
         req['request']['original_utterance']
