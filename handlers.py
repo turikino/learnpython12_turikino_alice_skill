@@ -55,7 +55,7 @@ def dialog_handler(req, res):
 
     # Пустой запрос.
     if req['request']['original_utterance'].lower() == '':
-        res['response']['text'] = 'Не могу найти. Давайте попробуем выучить что-нибудь другое?'
+        res['response']['text'] = 'Вы ничего не назвали. Давайте попробуем еще раз?'
         res['response']['buttons'] = get_suggests(user_id)
         return
 
