@@ -7,7 +7,7 @@ from __future__ import unicode_literals
 sessionStorage = {}
 
 # Функция для непосредственной обработки диалога.
-def greet_user(req, res):
+def dialog_handler(req, res):
     user_id = req['session']['user_id']
 
     if req['session']['new']:
