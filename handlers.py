@@ -2,6 +2,7 @@
 # Импортирует поддержку UTF-8.
 from __future__ import unicode_literals
 
+
 # Хранилище данных о сессиях.
 sessionStorage = {}
 
@@ -12,7 +13,6 @@ def greet_user(req, res):
     if req['session']['new']:
         # Это новый пользователь.
         # Инициализируем сессию и поприветствуем его.
-
         sessionStorage[user_id] = {
             'suggests': [
                 "Стихи",
@@ -31,7 +31,7 @@ def greet_user(req, res):
         "поэма"
     ]:
         res['response']['text'] = 'Назовите стихотворение или поэта.'
-        res['response']['branch'] = 'poems'
+        res['session']['branch'] = 'poems'
         return
 
     # Ветка теоремы.
@@ -40,6 +40,7 @@ def greet_user(req, res):
         "закон"
     ]:
        res['response']['text'] = 'Назовите теорему, закон или имя ученого.'
+       res['session']['branch'] = 'math'
        return
 
     # Ветка русский язык.
@@ -49,6 +50,7 @@ def greet_user(req, res):
         "языка"
     ]:
         res['response']['text'] = 'Назовите правило русского языка.'
+        res['session']['branch'] = 'language'
         return
 
     # Пустой запрос.
