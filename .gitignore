@@ -1,8 +1,6 @@
 env/
 api.py
 templates/
-poems.db
-poems.db-journal
 .DS_Store
 .idea/
 __pycache__/
