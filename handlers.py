@@ -73,16 +73,39 @@ def dialog_handler(req, res):
 
 # Функция работает с базой стихов
 def poems(req, res):
-
+    user_id = req['session']['user_id']
+    res['response']['text'] = ['проверка поэтов']
+    sessionStorage[user_id] = {
+        'suggests': [
+            "Автор",
+            "Произведение"
+        ]
+    }
+    res['response']['button'] = get_suggests(user_id)
     return
 
 # Функция работает с базой теорем и законов
 def math(req, res):
-
+    user_id = req['session']['user_id']
+    res['response']['text'] = ['проверка математики']
+    sessionStorage[user_id] = {
+        'suggests': [
+            "Ученый",
+            "Закон",
+            "Теорема"
+        ]
+    }
+    res['response']['button'] = get_suggests(user_id)
     return
 
 # Функция работает с базой правил языка
 def language(req, res):
+    sessionStorage[user_id] = {
+        'suggests': [
+            "Правило написания",
+            "Правило пунктуации"
+        ]
+    }
 
     return
 
