@@ -2,25 +2,24 @@
 # Импортирует поддержку UTF-8.
 from __future__ import unicode_literals
 
+from branch_poems import poems
+from suggests import get_suggests
 
 # Хранилище данных о сессиях.
 sessionStorage = {}
 
+
 # Функция для непосредственной обработки диалога.
 def dialog_handler(req, res):
+    """
+    :param req: request from user (json)
+    :param res: response from Alice (json)
+    :return:
+    """
     user_id = req['session']['user_id']
 
     if req['session']['new']:
         # Это новый пользователь.
-        # Инициализируем сессию и поприветствуем его.
-        sessionStorage[user_id] = {
-            'suggests': [
-                "Стихи",
-                "Правило русского языка",
-                "Теорему"
-            ]
-        }
-
         res['response']['text'] = 'Здравствуйте! Я помогаю запоминать текст. Что бы вы хотели выучить наизусть?'
         res['response']['buttons'] = get_suggests(user_id)
         return
@@ -30,8 +29,13 @@ def dialog_handler(req, res):
         "стихи",
         "поэма"
     ]:
-        res['response']['text'] = 'Назовите стихотворение или поэта.'
+        res['response']['text'] = 'Выберите как искать текст: по названию или по автору?'
+        buttons = [
+            "По названию",
+            "По автору"
+        ]
         res['session']['branch'] = 'poems'
+        res['response']['buttons'] = get_suggests(user_id, buttons)
         return
 
     # Ветка теоремы.
@@ -56,13 +60,22 @@ def dialog_handler(req, res):
     # Пустой запрос.
     if req['request']['original_utterance'].lower() == '':
         res['response']['text'] = 'Вы ничего не назвали. Давайте попробуем еще раз?'
-        res['response']['buttons'] = get_suggests(user_id)
+        res['response']['buttons'] = get_suggests(user_id, buttons)
         return
 
     # Перехват функции поэзия.
     if res['session']['branch'] == 'poems':
-
         poems(req, res)
+        return
+
+    # Перехват функции математики.
+    if res['session']['branch'] == 'math':
+        math(req, res)
+        return
+
+    # Перехват функции русский язык.
+    if res['session']['branch'] == 'language':
+        language(req, res)
         return
 
     # Если не можем найти в нашей базе, то пробуем создать новый запрос
@@ -70,63 +83,3 @@ def dialog_handler(req, res):
         req['request']['original_utterance']
     )
     res['response']['buttons'] = get_suggests(user_id)
-
-# Функция работает с базой стихов
-def poems(req, res):
-    user_id = req['session']['user_id']
-    res['response']['text'] = ['проверка поэтов']
-    sessionStorage[user_id] = {
-        'suggests': [
-            "Автор",
-            "Произведение"
-        ]
-    }
-    res['response']['button'] = get_suggests(user_id)
-    return
-
-# Функция работает с базой теорем и законов
-def math(req, res):
-    user_id = req['session']['user_id']
-    res['response']['text'] = ['проверка математики']
-    sessionStorage[user_id] = {
-        'suggests': [
-            "Ученый",
-            "Закон",
-            "Теорема"
-        ]
-    }
-    res['response']['button'] = get_suggests(user_id)
-    return
-
-# Функция работает с базой правил языка
-def language(req, res):
-    sessionStorage[user_id] = {
-        'suggests': [
-            "Правило написания",
-            "Правило пунктуации"
-        ]
-    }
-
-    return
-
-
-# Функция возвращает две подсказки для ответа.
-def get_suggests(user_id):
-    session = sessionStorage[user_id]
-
-    # Выбираем подсказки из массива.
-    suggests = [
-        {'title': suggest, 'hide': True}
-        for suggest in session['suggests']
-    ]
-
-    # Если осталась только одна подсказка, предлагаем подсказку
-    # со ссылкой на Яндекс.
-    if len(suggests) < 2:
-        suggests.append({
-            "title": "Поищем на Яндексе?",
-            "url": "https://yandex.ru/search?text={}".format(req['request']['original_utterance']),
-            "hide": True
-        })
-
-    return suggests
