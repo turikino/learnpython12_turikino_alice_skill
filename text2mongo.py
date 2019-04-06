@@ -25,7 +25,7 @@ def text2list(filename, id):
     with open(filename, mode='r') as f:
         name = os.path.basename(filename).split('.')[0]
         work_list = [line.strip('\n') for line in f.readlines() if line != '\n']
-        author = work_list[:1]
+        author = work_list[0]
         text = work_list[1:]
         poem = {
             "poem_id": "poem_{}".format(id),
