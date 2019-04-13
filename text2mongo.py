@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import os
 import json
 import argparse
+import request
 import pymongo
 from pymongo import MongoClient
 
@@ -33,6 +34,15 @@ def text2list(filename, id):
             "name": name,
             "text": text
         }
+    return poem
+
+def htmlform2list(author, name, uset_text):
+    text = [line.strip('\n') for line in request.form.get('user_text') if line != '\n']
+    poem = {
+        "author": author,
+        "name": name,
+        "text": text
+    }
     return poem
 
 
