@@ -1,6 +1,5 @@
 env/
 api.py
-templates/
 .DS_Store
 .idea/
 __pycache__/
