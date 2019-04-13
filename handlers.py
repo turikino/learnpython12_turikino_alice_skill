@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 import logging
 
-from branch_poems import poems
 from utils import get_suggests, search_poet, get_text
 
 logging.basicConfig(level=logging.DEBUG)
